@@ -50,11 +50,11 @@ class Chart extends React.Component{
                     options={{
                         title:{
                             display: this.props.displayTitle,
-                            text: 'largest cities in masss',
+                            text: this.props.displayText,
                             fontSize: 25
                         },
                         legend: {
-                            display: this.props.displayLegend,
+                            display: true,
                             position: this.props.legendPosition
                         }
                     }}
