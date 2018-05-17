@@ -33,12 +33,12 @@ class Chart extends React.Component{
         }
     }
 
-    static defaultProps = {
-        displayTitle: true,
-        displayLegend: true,
-        legendPosition: 'right',
-        location: 'City'
-    }
+    // static defaultProps = {
+    //     displayTitle: true,
+    //     displayLegend: true,
+    //     legendPosition: 'right',
+    //     location: 'City'
+    // }
 
     render(){
         return(
