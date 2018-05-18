@@ -3,6 +3,10 @@ import ReactDOM from 'react-dom';
 import axios from 'axios';
 import Chart from './Chart.js';
 import Qs from 'qs';
+import 'react-dates/initialize';
+// import 'react-dates/lib/css/_datepicker.css';
+import { SingleDatePicker, DayPickerRangeController } from 'react-dates';
+
 
 class App extends React.Component {
   constructor(){
@@ -11,12 +15,15 @@ class App extends React.Component {
       locationEntered: '',
       location: '',
       locationName: '',
+      date: '',
+      dateEntered: '',
       observationHoursArray: [],
       //chart states
       chartData: {}
     };
-    this.changeHandler = this.changeHandler.bind(this);
-    this.enterLocation = this.enterLocation.bind(this);
+    this.changePlaceHandler = this.changePlaceHandler.bind(this);
+    this.enterInputs = this.enterInputs.bind(this);
+    this.changeDateHandler = this.changeDateHandler.bind(this);
   }
 
   componentWillMount(){
@@ -77,7 +84,7 @@ class App extends React.Component {
 
   // }
 
-  getCords(inputAddress){
+  getCords(inputAddress, inputDate){
     console.log(inputAddress);
     //google places api
     axios({
@@ -101,13 +108,13 @@ class App extends React.Component {
     }).then((res) => {
       console.log(res.data.results[0].geometry.location);
       const cords = res.data.results[0].geometry.location;
-      this.getWeather(cords)
+      this.getWeather(cords, inputDate)
     });
   }
   
-  getWeather(cords){
+  getWeather(cords, inputDate){
     //wunderground api
-    axios.get(`http://api.wunderground.com/api/28cbe1ca6cde9931/history_20160405/geolookup/q/${cords.lat},${cords.lng}.json`)
+    axios.get(`http://api.wunderground.com/api/28cbe1ca6cde9931/history_2016${inputDate}/geolookup/q/${cords.lat},${cords.lng}.json`)
       .then((res) => {
         // console.log(res.data);
 
@@ -144,34 +151,47 @@ class App extends React.Component {
       })
   }
 
-  changeHandler(e){
+  changePlaceHandler(e){
     this.setState({
-      location: e.target.value
+      location: e.target.value,
+    })
+  }
+  changeDateHandler(e) {
+    this.setState({
+      date: e.target.value
     })
   }
   
   
-  enterLocation(e){
+  enterInputs(e){
     e.preventDefault();
-    // const locationClone = Array.from(this.state.locationEntered);
-    // locationClone.push(this.state.location);
+
     const locationClone = this.state.location;
+    const dateClone = this.state.date;
     this.setState({
-      locationEntered: locationClone
+      locationEntered: locationClone,
+      dateEntered: dateClone
     })
     console.log('entered');
 
     // this.getCords(this.state.locationEntered);
-    setTimeout(() => this.getCords(this.state.locationEntered), 1000); 
+    setTimeout(() => this.getCords(this.state.locationEntered, this.state.dateEntered), 1000); 
 
   }
   render() {
 
     return (
       <div>
-        <form action="">
-          <input type="text" name='place' onChange={this.changeHandler} value={this.state.location}/>
-          <button onClick={this.enterLocation}>Enter your location</button>
+        <form action="" onSubmit={this.enterInputs}>
+          <input type="text" name='place' onChange={this.changePlaceHandler} value={this.state.location}/>
+          {/* <SingleDatePicker
+            date={this.state.date} // momentPropTypes.momentObj or null
+            onDateChange={date => this.setState({ date })} // PropTypes.func.isRequired
+            focused={this.state.focused} // PropTypes.bool
+            onFocusChange={({ focused }) => this.setState({ focused })} // PropTypes.func.isRequired
+          /> */}
+          <input type="text" name='date' onChange={this.changeDateHandler} value={this.state.date}/>
+          <button>Enter your location</button>
         </form>
         <Chart chartData={this.state.chartData} legendPosition='bottom' displayTitle='true' displayText={this.state.locationName} />
       </div>
