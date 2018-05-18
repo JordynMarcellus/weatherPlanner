@@ -18,11 +18,14 @@ class App extends React.Component {
       dateEntered: '',
       observationHoursArray: [],
       //chart states
-      chartData: {}
+      chartData: {},
+      year: '',
+      yearEntered: ''
     };
     this.changePlaceHandler = this.changePlaceHandler.bind(this);
     this.enterInputs = this.enterInputs.bind(this);
     this.timeFormat = this.timeFormat.bind(this);
+    this.yearHandler = this.yearHandler.bind(this);
   }
 
   componentWillMount(){
@@ -157,6 +160,12 @@ class App extends React.Component {
       location: e.target.value,
     })
   }
+
+  yearHandler(e){
+    this.setState({
+      year: e.target.value
+    })
+  }
  
   timeFormat(n) { 
     return n < 10 ? '0' + n : '' + n; 
@@ -167,11 +176,14 @@ class App extends React.Component {
 
     const locationClone = this.state.location;
     const dateClone = this.state.date;
+    const yearClone = this.state.year;
     this.setState({
       locationEntered: locationClone,
-      dateEntered: dateClone
+      dateEntered: dateClone,
+      yearEntered: yearClone
     })
     console.log('entered');
+
     const dayInputed = this.state.date._d.getDate();
     const monthInputed = this.state.date._d.getMonth() + 1;
     const dayInputFormatted = this.timeFormat(dayInputed);
@@ -183,6 +195,10 @@ class App extends React.Component {
 
   }
   render() {
+    const test = [];
+    for (let i = 0; i < 3; i++) {
+      test.push(<Chart key={i} chartData={this.state.chartData} legendPosition='bottom' displayTitle='true' displayText={this.state.locationName} />);
+    }
 
     return (
       <div>
@@ -194,12 +210,31 @@ class App extends React.Component {
             focused={this.state.focused} // PropTypes.bool
             onFocusChange={({ focused }) => this.setState({ focused })} // PropTypes.func.isRequired
           />
+          <YearSelector year={this.state.year} yearHandle={this.yearHandler}/>
           <button>Enter your location</button>
         </form>
-        <Chart chartData={this.state.chartData} legendPosition='bottom' displayTitle='true' displayText={this.state.locationName} />
+
+          {test}
       </div>
     )
   }
+}
+
+const YearSelector = (props) => {
+  return (
+    <select id="yearSelector" value={props.year} onChange={props.yearHandle}>
+      <option value="1">1</option>
+      <option value="2">2</option>
+      <option value="3">3</option>
+      <option value="4">4</option>
+      <option value="5">5</option>
+      <option value="6">6</option>
+      <option value="7">7</option>
+      <option value="8">8</option>
+      <option value="9">9</option>
+      <option value="10">10</option>
+    </select> 
+  );
 }
 
 ReactDOM.render(<App />, document.getElementById('app'));
