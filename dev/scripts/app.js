@@ -4,8 +4,7 @@ import axios from 'axios';
 import Chart from './Chart.js';
 import Qs from 'qs';
 import 'react-dates/initialize';
-// import 'react-dates/lib/css/_datepicker.css';
-import { SingleDatePicker, DayPickerRangeController } from 'react-dates';
+import { DateRangePicker, SingleDatePicker, DayPickerRangeController } from 'react-dates';
 
 
 class App extends React.Component {
@@ -15,7 +14,7 @@ class App extends React.Component {
       locationEntered: '',
       location: '',
       locationName: '',
-      date: '',
+      // date: '',
       dateEntered: '',
       observationHoursArray: [],
       //chart states
@@ -23,7 +22,7 @@ class App extends React.Component {
     };
     this.changePlaceHandler = this.changePlaceHandler.bind(this);
     this.enterInputs = this.enterInputs.bind(this);
-    this.changeDateHandler = this.changeDateHandler.bind(this);
+    this.timeFormat = this.timeFormat.bind(this);
   }
 
   componentWillMount(){
@@ -35,7 +34,7 @@ class App extends React.Component {
         labels: ['Boston', 'Worcester', 'Springfield', 'Lowell', 'Cambridge', 'New Bedford'],
         datasets: [
           {
-            label: 'Population',
+            label: 'Temperature',
             data: [
               617594,
               181045,
@@ -114,7 +113,9 @@ class App extends React.Component {
   
   getWeather(cords, inputDate){
     //wunderground api
-    axios.get(`http://api.wunderground.com/api/28cbe1ca6cde9931/history_2016${inputDate}/geolookup/q/${cords.lat},${cords.lng}.json`)
+    console.log(inputDate[0]);
+    console.log(inputDate[1]);
+    axios.get(`http://api.wunderground.com/api/28cbe1ca6cde9931/history_2016${inputDate[0]}${inputDate[1]}/geolookup/q/${cords.lat},${cords.lng}.json`)
       .then((res) => {
         // console.log(res.data);
 
@@ -156,12 +157,10 @@ class App extends React.Component {
       location: e.target.value,
     })
   }
-  changeDateHandler(e) {
-    this.setState({
-      date: e.target.value
-    })
+ 
+  timeFormat(n) { 
+    return n < 10 ? '0' + n : '' + n; 
   }
-  
   
   enterInputs(e){
     e.preventDefault();
@@ -173,9 +172,14 @@ class App extends React.Component {
       dateEntered: dateClone
     })
     console.log('entered');
+    const dayInputed = this.state.date._d.getDate();
+    const monthInputed = this.state.date._d.getMonth() + 1;
+    const dayInputFormatted = this.timeFormat(dayInputed);
+    const monthInputFormatted = this.timeFormat(monthInputed);
+    const monthDay = [monthInputFormatted, dayInputFormatted];
 
     // this.getCords(this.state.locationEntered);
-    setTimeout(() => this.getCords(this.state.locationEntered, this.state.dateEntered), 1000); 
+    setTimeout(() => this.getCords(this.state.locationEntered, monthDay), 1000); 
 
   }
   render() {
@@ -184,13 +188,12 @@ class App extends React.Component {
       <div>
         <form action="" onSubmit={this.enterInputs}>
           <input type="text" name='place' onChange={this.changePlaceHandler} value={this.state.location}/>
-          {/* <SingleDatePicker
+          <SingleDatePicker
             date={this.state.date} // momentPropTypes.momentObj or null
             onDateChange={date => this.setState({ date })} // PropTypes.func.isRequired
             focused={this.state.focused} // PropTypes.bool
             onFocusChange={({ focused }) => this.setState({ focused })} // PropTypes.func.isRequired
-          /> */}
-          <input type="text" name='date' onChange={this.changeDateHandler} value={this.state.date}/>
+          />
           <button>Enter your location</button>
         </form>
         <Chart chartData={this.state.chartData} legendPosition='bottom' displayTitle='true' displayText={this.state.locationName} />
