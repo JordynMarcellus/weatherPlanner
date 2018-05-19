@@ -16,16 +16,17 @@ class App extends React.Component {
       locationName: '',
       // date: '',
       dateEntered: '',
-      observationHoursArray: [],
       //chart states
       chartData: {},
       year: '',
-      yearEntered: ''
+      yearEntered: '',
+      renderChartsArray: []
     };
     this.changePlaceHandler = this.changePlaceHandler.bind(this);
     this.enterInputs = this.enterInputs.bind(this);
     this.timeFormat = this.timeFormat.bind(this);
     this.yearHandler = this.yearHandler.bind(this);
+    this.renderCharts = this.renderCharts.bind(this);
   }
 
   componentWillMount(){
@@ -177,11 +178,11 @@ class App extends React.Component {
     const locationClone = this.state.location;
     const dateClone = this.state.date;
     const yearClone = this.state.year;
-    this.setState({
-      locationEntered: locationClone,
-      dateEntered: dateClone,
-      yearEntered: yearClone
-    })
+    // this.setState({
+    //   locationEntered: locationClone,
+    //   dateEntered: dateClone,
+    //   yearEntered: yearClone
+    // })
     console.log('entered');
 
     const dayInputed = this.state.date._d.getDate();
@@ -191,14 +192,28 @@ class App extends React.Component {
     const monthDay = [monthInputFormatted, dayInputFormatted];
 
     // this.getCords(this.state.locationEntered);
-    setTimeout(() => this.getCords(this.state.locationEntered, monthDay), 1000); 
-
+    setTimeout(() => this.getCords(this.state.locationEntered, monthDay), 1000);
+    
+    
+    let newChart = <Chart chartData={this.state.chartData} legendPosition='bottom' displayTitle='true' displayText={this.state.locationName} />;
+    const renderChartsArrayClone = Array.from(this.state.renderChartsArray);
+    
+    console.log(renderChartsArrayClone.unshift(newChart));
+    this.setState({
+      locationEntered: locationClone,
+      dateEntered: dateClone,
+      yearEntered: yearClone,
+      renderChartsArray: renderChartsArrayClone
+    })
   }
+
+  renderCharts(){
+    // return this.state.renderChartsArray.map((renderChart) => {
+      return <Chart chartData={this.state.chartData} legendPosition='bottom' displayTitle='true' displayText={this.state.locationName} />
+    // });
+  }
+
   render() {
-    const test = [];
-    for (let i = 0; i < 3; i++) {
-      test.push(<Chart key={i} chartData={this.state.chartData} legendPosition='bottom' displayTitle='true' displayText={this.state.locationName} />);
-    }
 
     return (
       <div>
@@ -213,8 +228,12 @@ class App extends React.Component {
           <YearSelector year={this.state.year} yearHandle={this.yearHandler}/>
           <button>Enter your location</button>
         </form>
-
-          {test}
+        {/* {this.state.tickets}
+        {this.renderCharts()} */}
+        {this.state.renderChartsArray.map((chart) => {
+          return chart
+        })}
+        
       </div>
     )
   }
