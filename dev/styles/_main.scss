@@ -1,0 +1,36 @@
+.mainSection {
+    // background: lightblue;
+}
+
+.locationInput {
+    height: 50px;
+    font-size: 20px;
+    padding: 2px 5px;
+}
+
+.SingleDatePicker{
+    height: 50px;
+ 
+}
+
+.wrapper{
+    max-width: 1080px;
+    margin: 0 auto;
+}
+
+form{
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+    justify-content: space-around;
+    height: 300px;
+
+    select{
+        border: none;
+        height: 50px;
+    }
+}
+
+.infoSection{
+    background: lightblue;
+}
