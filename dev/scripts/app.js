@@ -27,38 +27,11 @@ class App extends React.Component {
             label: 'Temperature in Celsius',
             data: [],
             backgroundColor: 'rgba(54, 162, 235, 0.6)',
-            // hoverBackgroundColor: 'rgb(109,192,213)'
             hoverBackgroundColor: 'rgb(255,242,117)'
 
           }
         ]
-      },
-      // options: {
-      //   legend: {
-      //     labels: {
-      //       fontColor: "white",
-      //       fontSize: 18
-      //     }
-      //   },
-      //   scales: {
-      //     yAxes: [{
-      //       ticks: {
-      //         fontColor: "white",
-      //         fontSize: 18,
-      //         stepSize: 1,
-      //         beginAtZero: true
-      //       }
-      //     }],
-      //     xAxes: [{
-      //       ticks: {
-      //         fontColor: "white",
-      //         fontSize: 14,
-      //         stepSize: 1,
-      //         beginAtZero: true
-      //       }
-      //     }]
-      //   }
-      // }
+      }
     };
     this.changePlaceHandler = this.changePlaceHandler.bind(this);
     this.enterInputs = this.enterInputs.bind(this);
@@ -66,49 +39,6 @@ class App extends React.Component {
     this.yearHandler = this.yearHandler.bind(this);
   }
 
-  // componentWillMount(){
-  //   this.getChartData();
-  // }
-
-  // getChartData(){
-  //   this.setState({
-  //     chartData: {
-  //       labels: [],
-  //       datasets: [
-  //         {
-  //           label: '',
-  //           data: [],
-  //           backgroundColor: 'rgba(54, 162, 235, 0.6)'
- 
-  //         }
-  //       ]
-  //     }
-  //   });
-  // }
-
-  // componentWillMount(){
-
-  // }
-  // componentDidMount(){
-
-    
-
-  // }
-  // componentWillReceiveProps(){
-
-  // }
-  // shouldComponentUpdate(){
-
-  // }
-  // componentWillUpdate(){
-
-  // }
-  // componentDidMount(){
-
-  // }
-  // componentWillUnmount(){
-
-  // }
 
   getCords(inputAddress, inputDate, year){
     console.log(inputAddress);

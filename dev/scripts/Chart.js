@@ -24,10 +24,12 @@ class Chart extends React.Component{
                     // width={100}
                     // height={50}
                     options={{
+                        maintainAspectRatio: true,
                         title:{
                             display: this.props.displayTitle,
                             text: this.props.displayText,
-                            fontSize: 25
+                            fontSize: 25,
+                            fontColor: "white"
                         },
                         legend: {
                             display: true,

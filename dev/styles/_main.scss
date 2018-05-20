@@ -28,6 +28,10 @@ body{
 .infoSection{
     display: flex;
     flex-flow: column nowrap;
+
+    h1{
+        background: rgba(54, 162, 235, 0.2);
+    }
 }
 
 .appTitle{
@@ -84,6 +88,6 @@ form{
 }
 
 .chart{
-    background: linear-gradient(to right, rgba(0,0,0,0.3), rgba(0,0,0,0.3));
+    background: rgba(54, 162, 235, 0.3);
 }
 
