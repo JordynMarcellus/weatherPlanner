@@ -14,9 +14,7 @@ class App extends React.Component {
       locationEntered: '',
       location: '',
       locationName: '',
-      // date: '',
       dateEntered: '',
-      //chart states
       year: '',
       yearEntered: '2018',
       renderChartsArray: [],
@@ -26,9 +24,8 @@ class App extends React.Component {
           {
             label: 'Temperature in Celsius',
             data: [],
-            backgroundColor: 'rgba(54, 162, 235, 0.6)',
+            backgroundColor: 'rgba(255,242,117, 0.6)',
             hoverBackgroundColor: 'rgb(255,242,117)'
-
           }
         ]
       }
@@ -132,11 +129,6 @@ class App extends React.Component {
     const locationClone = this.state.location;
     const dateClone = this.state.date;
     const yearClone = this.state.year;
-    // this.setState({
-    //   locationEntered: locationClone,
-    //   dateEntered: dateClone,
-    //   yearEntered: yearClone
-    // })
     console.log('entered');
 
     const dayInputed = this.state.date._d.getDate();
@@ -145,7 +137,7 @@ class App extends React.Component {
     const monthInputFormatted = this.timeFormat(monthInputed);
     const monthDay = [monthInputFormatted, dayInputFormatted];
 
-    // this.getCords(this.state.locationEntered);
+    //delay for updating input
     setTimeout(() => this.getCords(this.state.locationEntered, monthDay, this.state.yearEntered), 500);
     
     
@@ -169,8 +161,9 @@ class App extends React.Component {
     return (
       <div className='mainSection'>
         <div className='wrapper'>
+          <h1 className="appTitle">Weather Planner</h1>
           <div className="infoSection">
-            <h1 className='appTitle'>Enter your destination and date of travel to get the weather trend for a selected year.</h1>
+            <h1 className='description'>Enter your destination and date of travel to get the weather trend for a selected year.</h1>
             <form action="" onSubmit={this.enterInputs}>
               <input className='locationInput' placeholder='Enter location' type="text" name='place' onChange={this.changePlaceHandler} value={this.state.location}/>
               <div className='timeInputs'>

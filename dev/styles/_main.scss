@@ -15,7 +15,19 @@ html{
 body{
     font-size: 1rem;
     margin: 0;
+    font-family: sans-serif;
 }
+
+.appTitle{
+    font-size: 5rem;
+    color: white;
+    margin: 0;
+    text-align: center;
+    padding: 30px;
+
+    font-family: 'Roboto Condensed';
+}
+
 
 .mainSection {
     // background: lightblue;
@@ -31,10 +43,11 @@ body{
 
     h1{
         background: rgba(54, 162, 235, 0.2);
+        color: white;
     }
 }
 
-.appTitle{
+.description{
     text-align: center;
     padding: 30px 50px;
     font-size: 3rem;
@@ -84,6 +97,8 @@ form{
         border: none;
         margin: 20px;
         padding: 20px 15px;
+
+ 
     }
 }
 
