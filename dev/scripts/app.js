@@ -21,16 +21,44 @@ class App extends React.Component {
       yearEntered: '2018',
       renderChartsArray: [],
       chartData: {
-        labels: ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12','13', '14','15','16','17','18','19','20', '21','22','23','24'],
+        labels: ['0000Hrs', '0100Hrs', '0200Hrs', '0300Hrs', '0400Hrs', '0500Hrs', '0600Hrs', '0700Hrs', '0800Hrs', '0900Hrs', '1000Hrs', '1100Hrs', '1200Hrs', '1300Hrs', '1400Hrs', '1500Hrs', '1600Hrs', '1700Hrs', '1800Hrs', '1900Hrs', '2000Hrs', '2100Hrs', '2200Hrs', '2300Hrs','2400Hrs'],
         datasets: [
           {
-            label: '',
+            label: 'Temperature in Celsius',
             data: [],
-            backgroundColor: 'rgba(54, 162, 235, 0.6)'
+            backgroundColor: 'rgba(54, 162, 235, 0.6)',
+            // hoverBackgroundColor: 'rgb(109,192,213)'
+            hoverBackgroundColor: 'rgb(255,242,117)'
 
           }
         ]
-      }
+      },
+      // options: {
+      //   legend: {
+      //     labels: {
+      //       fontColor: "white",
+      //       fontSize: 18
+      //     }
+      //   },
+      //   scales: {
+      //     yAxes: [{
+      //       ticks: {
+      //         fontColor: "white",
+      //         fontSize: 18,
+      //         stepSize: 1,
+      //         beginAtZero: true
+      //       }
+      //     }],
+      //     xAxes: [{
+      //       ticks: {
+      //         fontColor: "white",
+      //         fontSize: 14,
+      //         stepSize: 1,
+      //         beginAtZero: true
+      //       }
+      //     }]
+      //   }
+      // }
     };
     this.changePlaceHandler = this.changePlaceHandler.bind(this);
     this.enterInputs = this.enterInputs.bind(this);
@@ -125,7 +153,7 @@ class App extends React.Component {
         let weatherObservationsArray = [];
         //loops through and grabs all the hour updates
         for (let i = 0; i < weatherObservationsTotal.length; i++){
-          weatherObservationsArray.push(weatherObservationsTotal[i].date.hour)
+          weatherObservationsArray.push(weatherObservationsTotal[i].date.hour + '00Hrs')
         };
         
         //array of all the temp in the hours
@@ -212,7 +240,7 @@ class App extends React.Component {
       <div className='mainSection'>
         <div className='wrapper'>
           <div className="infoSection">
-            <h1>Enter your destination and date of travel to get the weather trend for a selected year.</h1>
+            <h1 className='appTitle'>Enter your destination and date of travel to get the weather trend for a selected year.</h1>
             <form action="" onSubmit={this.enterInputs}>
               <input className='locationInput' placeholder='Enter location' type="text" name='place' onChange={this.changePlaceHandler} value={this.state.location}/>
               <div className='timeInputs'>
@@ -230,7 +258,7 @@ class App extends React.Component {
             </form>
           </div>
 
-            <Chart chartData={this.state.chartData} legendPosition='bottom' displayTitle='true' displayText={this.state.locationName} />
+          <Chart chartData={this.state.chartData} legendPosition='bottom' displayTitle='true' displayText={this.state.locationName}  />
 
 
         </div>
@@ -243,7 +271,7 @@ class App extends React.Component {
 const YearSelector = (props) => {
   return (
     <select id="yearSelector" value={props.year} onChange={props.yearHandle}>
-      <option value="">Select a year</option>
+      <option value="">Select Year</option>
       <option value="2017">2017</option>
       <option value="2016">2016</option>
       <option value="2015">2015</option>
@@ -258,9 +286,3 @@ const YearSelector = (props) => {
 }
 
 ReactDOM.render(<App />, document.getElementById('app'));
-
-
-//get user input of the day of travel and location
-//pull weather history from wunderground for the day but from previous years and location of the place
-//display as 24hrs - maybe for a few years
-//add google directions

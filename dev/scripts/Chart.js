@@ -1,5 +1,5 @@
 import React from 'react';
-import {Bar, Line, Pie} from 'react-chartjs-2';
+import {Bar, Line, Pie, Doughnut} from 'react-chartjs-2';
 
 class Chart extends React.Component{
     constructor(props){
@@ -19,7 +19,7 @@ class Chart extends React.Component{
     render(){
         return(
             <div className='chart'>
-                <Bar
+                <Line
                     data={this.state.chartData}
                     // width={100}
                     // height={50}
@@ -32,6 +32,20 @@ class Chart extends React.Component{
                         legend: {
                             display: true,
                             position: this.props.legendPosition
+                        },
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    fontColor: "white",
+                                    stepSize: 1
+                                }
+                            }],
+                            xAxes: [{
+                                ticks: {
+                                    fontColor: "white",
+                                    stepSize: 1
+                                }
+                            }]
                         }
                     }}
                 />

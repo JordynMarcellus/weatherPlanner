@@ -1,21 +1,39 @@
+.wrapper{
+    max-width: 1170px;
+    margin: 0 auto;
+    width: 95%;
+}
+
+img{
+    width: 100%;
+}
+
+html{
+    font-size: 62.5%;
+}
+
+body{
+    font-size: 1rem;
+    margin: 0;
+}
+
 .mainSection {
     // background: lightblue;
+    background-image: url('./../assets/luca-zanon-26595-unsplash.jpg');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
 }
 
-.locationInput {
-    height: 50px;
-    font-size: 20px;
-    padding: 2px 5px;
+.infoSection{
+    display: flex;
+    flex-flow: column nowrap;
 }
 
-.SingleDatePicker{
-    height: 50px;
- 
-}
-
-.wrapper{
-    max-width: 1080px;
-    margin: 0 auto;
+.appTitle{
+    text-align: center;
+    padding: 30px 50px;
+    font-size: 3rem;
 }
 
 form{
@@ -23,14 +41,49 @@ form{
     flex-flow: column nowrap;
     align-items: center;
     justify-content: space-around;
-    height: 300px;
+    
+    .locationInput {
+        font-size: 2rem;
+        width: 300px;
+        padding: 2px 5px;
+        height: 50px;
+        border: none;
+        margin: 20px;
+    }
+
+    .timeInputs{
+        display: flex;
+        flex-flow: row nowrap;
+        justify-content: space-between;
+        width: 300px;
+        margin: 20px;
+    }
+
+    
+    .SingleDatePicker{
+        height: 50px;
+        
+        #date{
+            height: 50px;
+        }
+    }
 
     select{
         border: none;
         height: 50px;
+        font-size: 2rem;
+    }
+
+    button{
+        font-size: 2rem;
+        background: rgb(255,242,117);
+        border: none;
+        margin: 20px;
+        padding: 20px 15px;
     }
 }
 
-.infoSection{
-    background: lightblue;
+.chart{
+    background: linear-gradient(to right, rgba(0,0,0,0.3), rgba(0,0,0,0.3));
 }
+
