@@ -161,7 +161,7 @@ class App extends React.Component {
     return (
       <div className='mainSection'>
         <div className='wrapper'>
-          <h1 className="appTitle">Weather Planner</h1>
+          <h1 className="appTitle">Weather History App</h1>
           <div className="infoSection">
             <h1 className='description'>Enter your destination and date of travel to get the weather trend for a selected year.</h1>
             <form action="" onSubmit={this.enterInputs}>
