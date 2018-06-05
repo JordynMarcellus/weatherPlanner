@@ -42,11 +42,13 @@ class App extends React.Component {
             hoverBackgroundColor: 'rgb(255,242,0)'
           },
         ]
-      }
+      },
+      containerArray: []
     };
     this.changePlaceHandler = this.changePlaceHandler.bind(this);
     this.enterInputs = this.enterInputs.bind(this);
     this.timeFormat = this.timeFormat.bind(this);
+    this.multiCall = this.multiCall.bind(this);
   }
 
 
@@ -75,17 +77,55 @@ class App extends React.Component {
       console.log(res.data.results[0].geometry.location);
       const cords = res.data.results[0].geometry.location;
 
-      for (let i = 0; i < 4; i++){
-        this.getWeather(cords, inputDate, 2017-i,i);
-      }
+      this.multiCall(cords, inputDate);
     });
   }
+
+  multiCall(cords, inputDate){
+    let newArray = [];
+
+    for (let i = 0; i < 4; i++) {
+      newArray.push(this.getWeather(cords, inputDate, 2017 - i));
+    }
+    Promise.all(newArray)
+      .then(data => {
+        console.log(data);
+        
+        const getCircularReplacer = () => {
+          const seen = new WeakSet;
+          return (key, value) => {
+            if (typeof value === "object" && value !== null) {
+              if (seen.has(value)) {
+                return;
+              }
+              seen.add(value);
+            }
+            return value;
+          };
+        };
+
+        //clones the object
+        // const chartDataClone = JSON.parse(JSON.stringify(this.state.chartData, getCircularReplacer()));
+        const chartDataClone = Object.assign({}, this.state.chartData);
+
+        for (let i = 0; i < 4; i++){
+          //updates the bargraph values
+          chartDataClone.datasets[i].data = data[i];
+        }
+
+        console.log(chartDataClone);
+
+        this.setState({
+          chartData: chartDataClone
+        })
+      })
+  }
   
-  getWeather(cords, inputDate, year,index){
+  getWeather(cords, inputDate, year){
     //wunderground api
     console.log(inputDate[0]);
     console.log(inputDate[1]);
-    axios.get(`http://api.wunderground.com/api/28cbe1ca6cde9931/history_${year}${inputDate[0]}${inputDate[1]}/geolookup/q/${cords.lat},${cords.lng}.json`)
+    return axios.get(`http://api.wunderground.com/api/28cbe1ca6cde9931/history_${year}${inputDate[0]}${inputDate[1]}/geolookup/q/${cords.lat},${cords.lng}.json`)
       .then((res) => {
         // console.log(res.data);
 
@@ -104,23 +144,65 @@ class App extends React.Component {
         for (let i = 0; i < weatherObservationsTotal.length; i++){
           tempPerHourArray.push(weatherObservationsTotal[i].tempm)
         };
-        // console.log(tempPerHourArray);
-        
-        //clones the object
-        const chartDataClone = Object.assign({}, this.state.chartData);
-        //updates the labels to hours
-        chartDataClone.labels = weatherObservationsArray;
-        //updates the bargraph values
-        chartDataClone.datasets[index].data = tempPerHourArray;
-        //grabs the location name 
-        const newLocationName = res.data.location.city;
+        console.log(tempPerHourArray);
+        return tempPerHourArray;
 
-        this.setState ({
-          locationName: newLocationName,
-          chartData: chartDataClone
-        }, () => {
-          console.log(this.state.chartData)
-        });
+        // this.setState(prevState => ({
+        //   containerArray: [...prevState.containerArray, tempPerHourArray]
+        // }))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        // const getCircularReplacer = () => {
+        //   const seen = new WeakSet;
+        //   return (key, value) => {
+        //     if (typeof value === "object" && value !== null) {
+        //       if (seen.has(value)) {
+        //         return;
+        //       }
+        //       seen.add(value);
+        //     }
+        //     return value;
+        //   };
+        // };
+        
+        // //clones the object
+        // const chartDataClone = JSON.parse(JSON.stringify(this.state.chartData, getCircularReplacer()));
+
+        // //updates the labels to hours
+        // chartDataClone.labels = weatherObservationsArray;
+        // //updates the bargraph values
+        // chartDataClone.datasets[0].data = tempPerHourArray;
+        // //grabs the location name 
+        // const newLocationName = res.data.location.city;
+
+        // console.log(chartDataClone);
+
+
+        // this.setState({
+        //   testerArray: chartDataClone
+        // }, () => {
+        //   console.log(this.state.testerArray)
+        // })
       })
   }
 
