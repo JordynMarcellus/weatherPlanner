@@ -5,6 +5,7 @@ import Chart from './Chart.js';
 import Qs from 'qs';
 import 'react-dates/initialize';
 import { DateRangePicker, SingleDatePicker, DayPickerRangeController } from 'react-dates';
+import Loader from 'react-loader-spinner';
 
 
 class App extends React.Component {
@@ -24,31 +25,34 @@ class App extends React.Component {
           {
             label: '2016',
             data: [],
-            hoverBackgroundColor: 'rgb(255,242,117)'
+            fill: false,
+            borderColor: '#892582',
+            backgroundColor: '#892582'
           },
           {
             label: '2015',
             data: [],
-            hoverBackgroundColor: 'rgb(0,242,117)'
+            fill: false,
+            borderColor: '#f86b18',
+            backgroundColor: '#f86b18'
           },
           {
             label: '2014',
             data: [],
-            hoverBackgroundColor: 'rgb(255,0,117)'
-          },
-          {
-            label: '2013',
-            data: [],
-            hoverBackgroundColor: 'rgb(255,242,0)'
+            fill: false,
+            borderColor: '#0095c8',
+            backgroundColor: '#0095c8'
           },
         ]
       },
-      containerArray: []
+      containerArray: [],
+      loading: false,
     };
     this.changePlaceHandler = this.changePlaceHandler.bind(this);
     this.enterInputs = this.enterInputs.bind(this);
     this.timeFormat = this.timeFormat.bind(this);
     this.multiCall = this.multiCall.bind(this);
+    this.smoothScroll = this.smoothScroll.bind(this);
   }
 
 
@@ -56,7 +60,7 @@ class App extends React.Component {
     console.log(inputAddress);
     //google places api
     axios({
-      url: "http://proxy.hackeryou.com",
+      url: "https://proxy.hackeryou.com",
       method: "GET",
       dataResponse: "json",
       paramsSerializer: function (params) {
@@ -84,7 +88,9 @@ class App extends React.Component {
   multiCall(cords, inputDate){
     let newArray = [];
 
-    for (let i = 0; i < 4; i++) {
+    this.setState({loading: true})
+
+    for (let i = 0; i < 3; i++) {
       newArray.push(this.getWeather(cords, inputDate, 2017 - i));
     }
     Promise.all(newArray)
@@ -108,7 +114,7 @@ class App extends React.Component {
         // const chartDataClone = JSON.parse(JSON.stringify(this.state.chartData, getCircularReplacer()));
         const chartDataClone = Object.assign({}, this.state.chartData);
 
-        for (let i = 0; i < 4; i++){
+        for (let i = 0; i < 3; i++){
           //updates the bargraph values
           chartDataClone.datasets[i].data = data[i];
         }
@@ -116,7 +122,10 @@ class App extends React.Component {
         console.log(chartDataClone);
 
         this.setState({
-          chartData: chartDataClone
+          chartData: chartDataClone,
+          loading: false
+        }, () => {
+          this.smoothScroll();
         })
       })
   }
@@ -146,63 +155,6 @@ class App extends React.Component {
         };
         console.log(tempPerHourArray);
         return tempPerHourArray;
-
-        // this.setState(prevState => ({
-        //   containerArray: [...prevState.containerArray, tempPerHourArray]
-        // }))
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        // const getCircularReplacer = () => {
-        //   const seen = new WeakSet;
-        //   return (key, value) => {
-        //     if (typeof value === "object" && value !== null) {
-        //       if (seen.has(value)) {
-        //         return;
-        //       }
-        //       seen.add(value);
-        //     }
-        //     return value;
-        //   };
-        // };
-        
-        // //clones the object
-        // const chartDataClone = JSON.parse(JSON.stringify(this.state.chartData, getCircularReplacer()));
-
-        // //updates the labels to hours
-        // chartDataClone.labels = weatherObservationsArray;
-        // //updates the bargraph values
-        // chartDataClone.datasets[0].data = tempPerHourArray;
-        // //grabs the location name 
-        // const newLocationName = res.data.location.city;
-
-        // console.log(chartDataClone);
-
-
-        // this.setState({
-        //   testerArray: chartDataClone
-        // }, () => {
-        //   console.log(this.state.testerArray)
-        // })
       })
   }
 
@@ -243,40 +195,72 @@ class App extends React.Component {
       dateEntered: dateClone,
       renderChartsArray: renderChartsArrayClone
     })
-
-
   }
 
+  smoothScroll(){
+    // Scroll to specific values
+    // scrollTo is the same
+    window.scroll({
+      top: 2500,
+      left: 0,
+      behavior: 'smooth'
+    });
+
+    // Scroll certain amounts from current position 
+    window.scrollBy({
+      top: 100, // could be negative value
+      left: 0,
+      behavior: 'smooth'
+    });
+
+    // Scroll to a certain element
+    document.querySelector('#chart').scrollIntoView({
+      behavior: 'smooth'
+    });
+  }
 
   render() {
 
     return (
       <div className='mainSection'>
         <div className='wrapper'>
-          <h1 className="appTitle">Weather History App</h1>
-          <div className="infoSection">
-            <h1 className='description'>Enter your destination and date of travel to get the weather trend for a selected year.</h1>
-            <form action="" onSubmit={this.enterInputs}>
-              <input className='locationInput' placeholder='Enter location' type="text" name='place' onChange={this.changePlaceHandler} value={this.state.location}/>
-              <div className='timeInputs'>
-                <SingleDatePicker
-                  date={this.state.date} // momentPropTypes.momentObj or null
-                  onDateChange={date => this.setState({ date })} // PropTypes.func.isRequired
-                  focused={this.state.focused} // PropTypes.bool
-                  onFocusChange={({ focused }) => this.setState({ focused })} // PropTypes.func.isRequired
-                  isOutsideRange={() => false}
-                  displayFormat="MMM DD"
-                />
-              </div>
-              <button>Enter your location</button>
-            </form>
+          <div className="mainPage">
+            <h1 className="appTitle">Weather History App</h1>
+            <div className="infoSection">
+              <h1 className='description'>Enter your destination and date of travel to get the weather trend for a selected year.</h1>
+              <form action="" onSubmit={this.enterInputs}>
+                <input className='locationInput' placeholder='Enter location' type="text" name='place' onChange={this.changePlaceHandler} value={this.state.location}/>
+                <div className='timeInputs'>
+                  <SingleDatePicker
+                    date={this.state.date} // momentPropTypes.momentObj or null
+                    onDateChange={date => this.setState({ date })} // PropTypes.func.isRequired
+                    focused={this.state.focused} // PropTypes.bool
+                    onFocusChange={({ focused }) => this.setState({ focused })} // PropTypes.func.isRequired
+                    isOutsideRange={() => false}
+                    displayFormat="MMM DD"
+                  />
+                </div>
+                  <button>Enter your location</button>
+                  {this.state.loading ? (
+                    <Loader 
+                      type="Oval"
+                      color="#f86b18"
+                      height="100"	
+                      width="100"
+                    /> 
+                ) : <div className='loaderPlaceholder'></div>}
+              </form>
+            </div>
           </div>
-
-          <Chart chartData={this.state.chartData} legendPosition='bottom' displayTitle='true' displayText={this.state.locationName}  />
-
-
         </div>
-        
+        <div id='chart'>
+          <Chart 
+            chartData={this.state.chartData} 
+            legendPosition='top' 
+            displayTitle='true' 
+            displayText={this.state.locationName}  
+          />
+        </div>
       </div>
     )
   }

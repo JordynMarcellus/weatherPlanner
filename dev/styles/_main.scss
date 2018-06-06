@@ -4,8 +4,20 @@
     width: 95%;
 }
 
+.mainPage{
+    height: 100vh;
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+}
+
 img{
     width: 100%;
+}
+
+.loaderPlaceholder{
+    width: 100px;
+    height: 100px;    
 }
 
 html{
@@ -79,7 +91,7 @@ form{
     
     .SingleDatePicker{
         height: 50px;
-        
+        width: 100%;
         #date{
             height: 50px;
         }
@@ -104,5 +116,7 @@ form{
 
 .chart{
     background: rgba(54, 162, 235, 0.3);
+    height: 100vh;
+    padding: 10px;
 }
 

@@ -24,7 +24,16 @@ class Chart extends React.Component{
                     // width={100}
                     // height={50}
                     options={{
-                        maintainAspectRatio: true,
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        hover:{
+                            mode: 'nearest',
+                            intersect: true
+                        },
+                        tooltips:{
+                            mode: 'index',
+                            intersect: false
+                        },
                         title:{
                             display: this.props.displayTitle,
                             text: this.props.displayText,
@@ -37,12 +46,26 @@ class Chart extends React.Component{
                         },
                         scales: {
                             yAxes: [{
+                                display: true,
+                                scaleLabel: {
+                                    display: true,
+                                    labelString: 'Temperature in Celsius',
+                                    fontColor: "white",
+                                    fontSize: 20
+                                },
                                 ticks: {
                                     fontColor: "white",
                                     stepSize: 1
                                 }
                             }],
                             xAxes: [{
+                                display: true,
+                                scaleLabel:{
+                                    display: true,
+                                    labelString: 'Hours of day',
+                                    fontColor: "white",
+                                    fontSize: 20
+                                },
                                 ticks: {
                                     fontColor: "white",
                                     stepSize: 1
