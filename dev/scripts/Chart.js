@@ -36,7 +36,7 @@ class Chart extends React.Component{
                         },
                         title:{
                             display: this.props.displayTitle,
-                            text: this.props.displayText,
+                            text: `Weather trends for ${this.props.displayText.city}, ${this.props.displayText.prov} on ${this.props.dateTitle}`,
                             fontSize: 25,
                             fontColor: "white"
                         },

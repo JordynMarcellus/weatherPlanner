@@ -12,12 +12,11 @@ class App extends React.Component {
   constructor(){
     super();
     this.state = {
-      locationEntered: '',
       location: '',
-      locationName: '',
-      dateEntered: '',
-      year: '',
-      yearEntered: '2018',
+      locationName: {
+        city: 'Select City',
+        prov: ''
+      },
       renderChartsArray: [],
       chartData: {
         labels: ['0000Hrs', '0100Hrs', '0200Hrs', '0300Hrs', '0400Hrs', '0500Hrs', '0600Hrs', '0700Hrs', '0800Hrs', '0900Hrs', '1000Hrs', '1100Hrs', '1200Hrs', '1300Hrs', '1400Hrs', '1500Hrs', '1600Hrs', '1700Hrs', '1800Hrs', '1900Hrs', '2000Hrs', '2100Hrs', '2200Hrs', '2300Hrs','2400Hrs'],
@@ -47,6 +46,7 @@ class App extends React.Component {
       },
       containerArray: [],
       loading: false,
+      dateTitle: 'Select Date'
     };
     this.changePlaceHandler = this.changePlaceHandler.bind(this);
     this.enterInputs = this.enterInputs.bind(this);
@@ -78,10 +78,18 @@ class App extends React.Component {
         xmlToJSON: false
       }
     }).then((res) => {
-      console.log(res.data.results[0].geometry.location);
+      console.log(res.data.results);
       const cords = res.data.results[0].geometry.location;
+      const locationTitle = {
+        city: res.data.results[0].address_components[0].long_name,
+        prov: res.data.results[0].address_components[2].long_name
+      }
 
       this.multiCall(cords, inputDate);
+
+      this.setState({
+        locationName: locationTitle
+      })
     });
   }
 
@@ -97,21 +105,8 @@ class App extends React.Component {
       .then(data => {
         console.log(data);
         
-        const getCircularReplacer = () => {
-          const seen = new WeakSet;
-          return (key, value) => {
-            if (typeof value === "object" && value !== null) {
-              if (seen.has(value)) {
-                return;
-              }
-              seen.add(value);
-            }
-            return value;
-          };
-        };
 
         //clones the object
-        // const chartDataClone = JSON.parse(JSON.stringify(this.state.chartData, getCircularReplacer()));
         const chartDataClone = Object.assign({}, this.state.chartData);
 
         for (let i = 0; i < 3; i++){
@@ -172,28 +167,30 @@ class App extends React.Component {
   enterInputs(e){
     e.preventDefault();
 
-    const locationClone = this.state.location;
-    const dateClone = this.state.date;
     console.log('entered');
 
     const dayInputed = this.state.date._d.getDate();
     const monthInputed = this.state.date._d.getMonth() + 1;
     const dayInputFormatted = this.timeFormat(dayInputed);
     const monthInputFormatted = this.timeFormat(monthInputed);
+    const dateInputed = this.state.date._d.toDateString();
+
+    //date with no year for the title of chart
+    const dateForTitle = dateInputed.slice(0, dateInputed.length - 5);
     const monthDay = [monthInputFormatted, dayInputFormatted];
 
+
     //delay for updating input
-    setTimeout(() => this.getCords(this.state.locationEntered, monthDay, this.state.yearEntered), 500);
+    setTimeout(() => this.getCords(this.state.location, monthDay), 500);
     
     
-    let newChart = <Chart chartData={this.state.chartData} legendPosition='bottom' displayTitle='true' displayText={this.state.locationName} />;
     const renderChartsArrayClone = Array.from(this.state.renderChartsArray);
     
-    console.log(renderChartsArrayClone.unshift(newChart));
     this.setState({
-      locationEntered: locationClone,
-      dateEntered: dateClone,
-      renderChartsArray: renderChartsArrayClone
+   
+      renderChartsArray: renderChartsArrayClone,
+      dateTitle: dateForTitle
+   
     })
   }
 
@@ -259,6 +256,7 @@ class App extends React.Component {
             legendPosition='top' 
             displayTitle='true' 
             displayText={this.state.locationName}  
+            dateTitle={this.state.dateTitle}
           />
         </div>
       </div>
